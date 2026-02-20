@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Фото-сюрприз!</title>
+<style>
+body {
+    background:black;
+    color:#00ff00;
+    font-family:monospace;
+    text-align:center;
+    margin:0;
+    padding:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+#loading {
+    font-size:50px;
+}
+
+#percent {
+    font-size:40px;
+}
+
+#smileText {
+    display:none;
+    font-size:60px;
+    color:#ff2e63;
+}
+
+#countdown {
+    display:none;
+    font-size:120px;
+    font-weight:bold;
+    color:#ffffff;
+}
+
+#flash {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:white;
+    opacity:0;
+    pointer-events:none;
+}
+
+@keyframes flashEffect {
+    0% {opacity:0;}
+    10% {opacity:1;}
+    100% {opacity:0;}
+}
+
+#cat {
+    display:none;
+    max-width:90%;
+    max-height:90%;
+    border-radius:15px;
+    box-shadow:0 0 50px white;
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading">Загрузка...</div>
+<div id="percent">0%</div>
+
+<div id="smileText">Улыбнись, сейчас тебя сфотографирую 📸</div>
+<div id="countdown"></div>
+<img id="cat" src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200" />
+<div id="flash"></div>
+
+<script>
+// 1️⃣ Загрузка
+let p = 0;
+let interval = setInterval(() => {
+    p++;
+    document.getElementById("percent").innerText = p + "%";
+    if (p >= 100) {
+        clearInterval(interval);
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("percent").style.display = "none";
+
+        // 2️⃣ Показываем текст «Улыбнись…»
+        let smileText = document.getElementById("smileText");
+        smileText.style.display = "block";
+
+        setTimeout(() => {
+            smileText.style.display = "none";
+
+            // 3️⃣ Отсчет 3-2-1
+            let countdownNumbers = ["3","2","1"];
+            let countdownElem = document.getElementById("countdown");
+            countdownElem.style.display = "block";
+            let i = 0;
+
+            function showCountdown() {
+                if (i < countdownNumbers.length) {
+                    countdownElem.innerText = countdownNumbers[i];
+                    i++;
+                    setTimeout(showCountdown, 1000); // 1 сек между числами
+                } else {
+                    countdownElem.style.display = "none";
+
+                    // 4️⃣ Вспышка и звук
+                    let flash = document.getElementById("flash");
+                    flash.style.animation = "flashEffect 0.6s ease-out";
+
+                    let audio = new Audio("https://www.soundjay.com/mechanical/camera-shutter-click-01.mp3");
+                    audio.play();
+
+                    // 5️⃣ Показываем кота
+                    setTimeout(() => {
+                        document.getElementById("cat").style.display = "block";
+                    }, 500);
+                }
+            }
+
+            showCountdown();
+        }, 1500); // время показа текста перед отсчетом
+    }
+}, 40);
+</script>
+
+</body>
+</html>
