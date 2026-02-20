@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Loading...</title>
+<style>
+body {
+    background:black;
+    color:#00ff00;
+    font-family:monospace;
+    text-align:center;
+    margin-top:20%;
+}
+#final {
+    display:none;
+    font-size:40px;
+    color:#ff2e63;
+}
+</style>
+</head>
+<body>
+
+<h2 id="loading">Проверка пользователя...</h2>
+<h3 id="percent">0%</h3>
+
+<div id="final">
+Лера — 100% особенная 💖
+</div>
+
+<script>
+let p = 0;
+let interval = setInterval(() => {
+    p++;
+    document.getElementById("percent").innerText = p + "%";
+    if (p >= 100) {
+        clearInterval(interval);
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("percent").style.display = "none";
+        document.getElementById("final").style.display = "block";
+    }
+}, 40);
+</script>
+
+</body>
+</html>
