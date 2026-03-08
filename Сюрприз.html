@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Слайд-шоу Софе</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .hidden { display: none; }
+  .photo {
+    max-width: 80%;
+    max-height: 60vh;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #fff;
+  }
+  .text {
+    font-size: 1.5em;
+    margin: 10px 0;
+  }
+  .typing {
+    border-right: .1em solid #fff;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  #progressBar {
+    width: 60%;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  #progress {
+    height: 20px;
+    width: 0;
+    background: #4caf50;
+  }
+</style>
+</head>
+<body>
+<div id="container">
+
+  <!-- Загрузка -->
+  <div id="loading" class="text">Загрузка... 0%</div>
+  <div id="progressBar"><div id="progress"></div></div>
+
+  <!-- Сбой -->
+  <div id="error" class="text hidden">Ошибка 404</div>
+  <div id="fixing" class="text hidden">Погоди, ща починю...</div>
+  <div id="fixed" class="text hidden">Вроде всё 👍</div>
+
+  <!-- Фотка с отсчётом -->
+  <div id="countdown" class="text hidden">Улыбнись, щас сфоткаю тебя📸<br><span id="timer"></span></div>
+  <img id="photo1" class="photo hidden" src="https://i.postimg.cc/mkvqMdTp/IMG-20260309-005232.jpg" alt="Фото 1">
+
+  <!-- Комплименты и фотки -->
+  <div id="text1" class="text hidden">Что за красотка я в раю?</div>
+  <div id="text2" class="text hidden">…заряжает настроение на весь день)</div>
+  <img id="photo2" class="photo hidden" src="https://i.postimg.cc/NjnKqmf0/IMG-20260309-013240.jpg" alt="Фото 2">
+
+  <!-- Видео -->
+  <div id="videoSlide" class="hidden">
+    <div class="text">Подождите что это...</div>
+    <iframe width="560" height="315" src="https://www.streamable.com/o/xffdf5" frameborder="0" allowfullscreen></iframe>
+  </div>
+
+  <!-- Глаза -->
+  <img id="photo3" class="photo hidden" src="https://i.postimg.cc/y6GzsjCS/IMG-20260309-004634.jpg" alt="Глаза">
+  <div id="text3" class="text hidden">Твои глаза красивее и ярче чем звёзды на небе 🤩😍</div>
+
+  <!-- Следующая фотка -->
+  <img id="photo4" class="photo hidden" src="https://i.postimg.cc/Y9yT2rZp/IMG-20260309-005151.jpg" alt="Фото 4">
+  <div id="text4" class="text hidden">Твоё каждое сообщение как глоток нон-стопа… заряжает настроение на весь день 😉</div>
+
+  <!-- Финал -->
+  <img id="photo5" class="photo hidden" src="https://i.postimg.cc/05zyYb87/IMG-20260309-005257.jpg" alt="Фото 5">
+  <div id="text5" class="text hidden typing"></div>
+
+  <img id="photo6" class="photo hidden" src="https://i.postimg.cc/bwNMn2Pq/IMG-20260309-010409-964.jpg" alt="Фото 6">
+  <div id="final" class="text hidden">Сделано Софе от Дани 💘😘</div>
+
+</div>
+
+<script>
+const loading = document.getElementById('loading');
+const progress = document.getElementById('progress');
+const error = document.getElementById('error');
+const fixing = document.getElementById('fixing');
+const fixed = document.getElementById('fixed');
+const countdown = document.getElementById('countdown');
+const timer = document.getElementById('timer');
+
+const photo1 = document.getElementById('photo1');
+const text1 = document.getElementById('text1');
+const text2 = document.getElementById('text2');
+const photo2 = document.getElementById('photo2');
+const videoSlide = document.getElementById('videoSlide');
+const photo3 = document.getElementById('photo3');
+const text3 = document.getElementById('text3');
+const photo4 = document.getElementById('photo4');
+const text4 = document.getElementById('text4');
+const photo5 = document.getElementById('photo5');
+const text5 = document.getElementById('text5');
+const photo6 = document.getElementById('photo6');
+const final = document.getElementById('final');
+
+function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function runShow() {
+  // Загрузка
+  for(let i=0;i<=100;i+=2){
+    loading.innerText = `Загрузка... ${i}%`;
+    progress.style.width = i + '%';
+    await sleep(30);
+  }
+  loading.classList.add('hidden');
+  document.getElementById('progressBar').classList.add('hidden');
+
+  // Сбой
+  error.classList.remove('hidden');
+  await sleep(1000);
+  error.classList.add('hidden');
+
+  fixing.classList.remove('hidden');
+  await sleep(1500);
+  fixing.classList.add('hidden');
+
+  fixed.classList.remove('hidden');
+  await sleep(1000);
+  fixed.classList.add('hidden');
+
+  // Отсчёт
+  countdown.classList.remove('hidden');
+  for(let i=3;i>0;i--){
+    timer.innerText = i;
+    await sleep(1000);
+  }
+  timer.innerText = '';
+  countdown.classList.add('hidden');
+
+  photo1.classList.remove('hidden');
+  text1.classList.remove('hidden');
+  await sleep(2000);
+
+  text2.classList.remove('hidden');
+  photo2.classList.remove('hidden');
+  await sleep(2000);
+
+  // Видео
+  videoSlide.classList.remove('hidden');
+  await sleep(4000);
+
+  // Глаза
+  videoSlide.classList.add('hidden');
+  photo3.classList.remove('hidden');
+  text3.classList.remove('hidden');
+  await sleep(2000);
+
+  photo4.classList.remove('hidden');
+  text4.classList.remove('hidden');
+  await sleep(2000);
+
+  // Медленная печать текста
+  photo5.classList.remove('hidden');
+  let message = "Я тя обожаю, самая лучшая подруга, спасибо что ты есть)";
+  for(let i=0;i<message.length;i++){
+    text5.innerText += message[i];
+    await sleep(50);
+  }
+
+  photo6.classList.remove('hidden');
+  final.classList.remove('hidden');
+}
+
+runShow();
+</script>
+</body>
+</html>
