@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Слайд-шоу Софе</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+}
+#container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+.text {
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.photo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    max-height: 80%;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.fadeIn { opacity: 1 !important; }
+.fadeOut { opacity: 0 !important; }
+.countdownNum {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8em;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.flash {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+iframe {
+    max-width: 90%;
+    max-height: 80%;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div id="loading" class="text">Загрузка... 0%</div>
+    <div id="error" class="text">Ошибка 404</div>
+    <div id="fixing" class="text">Ща починю...</div>
+    <div id="fixed" class="text">Вроде всё 👍</div>
+
+    <div id="countdown" class="text">Улыбнись, щас тебя сфоткаю 📸</div>
+    <div id="num3" class="countdownNum">3</div>
+    <div id="num2" class="countdownNum">2</div>
+    <div id="num1" class="countdownNum">1</div>
+    <div id="flash" class="flash"></div>
+
+    <img id="photo1" class="photo" src="https://i.postimg.cc/mkvqMdTp/IMG-20260309-005232.jpg">
+    <div id="text1" class="text">Что за красотка я в раю?</div>
+
+    <img id="photo2" class="photo" src="https://i.postimg.cc/NjnKqmf0/IMG-20260309-013240.jpg">
+    <div id="text2" class="text">…заряжает настроение на весь день)</div>
+
+    <div id="videoSlide" class="text">
+        Подожди что это...
+        <br>
+        <iframe src="https://streamable.com/xffdf5" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <img id="photo3" class="photo" src="https://i.postimg.cc/y6GzsjCS/IMG-20260309-004634.jpg">
+    <div id="text3" class="text">Твои глаза красивее и ярче чем звёзды на небе 🤩😍</div>
+
+    <img id="photo4" class="photo" src="https://i.postimg.cc/Y9yT2rZp/IMG-20260309-005151.jpg">
+    <div id="text4" class="text">Твоё каждое сообщение как глоток нон-стопа… заряжает настроение на весь день 😉</div>
+
+    <img id="photo5" class="photo" src="https://i.postimg.cc/05zyYb87/IMG-20260309-005257.jpg">
+    <div id="text5" class="text"></div>
+
+    <img id="photo6" class="photo" src="https://i.postimg.cc/bwNMn2Pq/IMG-20260309-010409-964.jpg">
+    <div id="final" class="text">Сделано Софе от Дани 💘😘</div>
+</div>
+
+<script>
+function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function fadeIn(el){
+    el.classList.add('fadeIn');
+    el.classList.remove('fadeOut');
+}
+async function fadeOut(el){
+    el.classList.add('fadeOut');
+    el.classList.remove('fadeIn');
+}
+
+async function runShow(){
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const fixing = document.getElementById('fixing');
+    const fixed = document.getElementById('fixed');
+    const countdown = document.getElementById('countdown');
+    const num3 = document.getElementById('num3');
+    const num2 = document.getElementById('num2');
+    const num1 = document.getElementById('num1');
+    const flash = document.getElementById('flash');
+
+    const photo1 = document.getElementById('photo1');
+    const text1 = document.getElementById('text1');
+    const photo2 = document.getElementById('photo2');
+    const text2 = document.getElementById('text2');
+    const videoSlide = document.getElementById('videoSlide');
+    const photo3 = document.getElementById('photo3');
+    const text3 = document.getElementById('text3');
+    const photo4 = document.getElementById('photo4');
+    const text4 = document.getElementById('text4');
+    const photo5 = document.getElementById('photo5');
+    const text5 = document.getElementById('text5');
+    const photo6 = document.getElementById('photo6');
+    const final = document.getElementById('final');
+
+    // Загрузка
+    for(let i=0;i<=100;i+=2){
+        loading.innerText = `Загрузка... ${i}%`;
+        await sleep(50); // медленнее
+    }
+    await fadeOut(loading);
+
+    // Сбой
+    await fadeIn(error);
+    await sleep(2000);
+    await fadeOut(error);
+
+    await fadeIn(fixing);
+    await sleep(2000);
+    await fadeOut(fixing);
+
+    await fadeIn(fixed);
+    await sleep(2000);
+    await fadeOut(fixed);
+
+    // Отсчет
+    await fadeIn(countdown);
+    await sleep(2000);
+    await fadeOut(countdown);
+
+    // 3-2-1
+    for(const num of [num3,num2,num1]){
+        await fadeIn(num);
+        await sleep(1000);
+        await fadeOut(num);
+    }
+
+    // Вспышка
+    flash.style.opacity = 1;
+    await sleep(300);
+    flash.style.opacity = 0;
+
+    // Первый фото-слайд
+    await fadeIn(photo1);
+    await fadeIn(text1);
+    await sleep(4000);
+    await fadeOut(photo1);
+    await fadeOut(text1);
+
+    // Второй фото-слайд
+    await fadeIn(photo2);
+    await fadeIn(text2);
+    await sleep(4000);
+    await fadeOut(photo2);
+    await fadeOut(text2);
+
+    // Видео
+    await fadeIn(videoSlide);
+    await sleep(8000); // 8 секунд на видео
+    await fadeOut(videoSlide);
+
+    // Фото с глазами
+    await fadeIn(photo3);
+    await fadeIn(text3);
+    await sleep(4000);
+    await fadeOut(photo3);
+    await fadeOut(text3);
+
+    // Фото 4
+    await fadeIn(photo4);
+    await fadeIn(text4);
+    await sleep(4000);
+    await fadeOut(photo4);
+    await fadeOut(text4);
+
+    // Фото 5 с медленной печатью
+    await fadeIn(photo5);
+    let message = "Я тя обожаю, самая лучшая подруга, спасибо что ты есть)";
+    for(let i=0;i<message.length;i++){
+        text5.innerText += message[i];
+        await sleep(100); // медленно
+    }
+    await sleep(3000);
+    await fadeOut(photo5);
+    await fadeOut(text5);
+
+    // Фото 6 финал
+    await fadeIn(photo6);
+    await fadeIn(final);
+}
+
+runShow();
+</script>
+
+</body>
+</html>
