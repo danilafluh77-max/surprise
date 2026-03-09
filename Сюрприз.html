@@ -2,81 +2,31 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Сюрприз</title>
+<title>Слайд-шоу Софе</title>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    flex-direction: column;
-  }
-
-  .slide {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 1s;
-    width: 100%;
-    height: 100%;
-  }
-
-  .slide.show {
-    opacity: 1;
-  }
-
-  .slide img {
-    max-width: 80%;
-    max-height: 70%;
-    margin-top: 20px;
-  }
-
-  .slide .text {
-    font-size: 2.5em;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  #progressBar {
-    width: 60%;
-    height: 25px;
-    background: #333;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 20px;
-  }
-
-  #progress {
-    height: 25px;
-    width: 0;
-    background: #4caf50;
-    transition: width 0.3s;
-  }
-
-  #flash {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: white;
-    top:0; left:0;
-    display: none;
-    z-index: 10;
-  }
-
-  .typing {
-    border-right: .1em solid #fff;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+body {
+  margin: 0; padding: 0;
+  font-family: Arial, sans-serif;
+  background: #111; color: #fff;
+  display: flex; justify-content: center; align-items: center;
+  height: 100vh; overflow: hidden;
+  flex-direction: column;
+}
+.slide {
+  position: absolute;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  opacity: 0; transition: opacity 1s;
+  width: 100%; height: 100%;
+}
+.slide.show { opacity: 1; }
+.slide img { max-width: 80%; max-height: 70%; margin-top: 20px; }
+.text { font-size: 2.5em; text-align: center; margin-bottom: 10px; }
+#progressBar { width: 60%; height: 25px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 20px; }
+#progress { height: 25px; width: 0; background: #4caf50; transition: width 0.3s; }
+#flash { position: absolute; width: 100%; height: 100%; background: white; top:0; left:0; display:none; z-index:10; }
+.typing { border-right: .1em solid #fff; white-space: pre-wrap; overflow: hidden; }
+#countdownSlide .number { font-size:5em; margin-top:20px; }
 </style>
 </head>
 <body>
@@ -94,16 +44,12 @@
 </div>
 
 <div id="fixSlide" class="slide">
-  <div class="text">Погоди, ща починю...</div>
-</div>
-
-<div id="fixedSlide" class="slide">
-  <div class="text">Вроде всё 👍</div>
+  <div class="text">Ща исправлю, всё норм</div>
 </div>
 
 <div id="countdownSlide" class="slide">
   <div class="text" style="font-size:3.5em;">Улыбнись😊, щас тебя сфоткаю📸</div>
-  <div class="text" id="timer" style="font-size:5em; margin-top:20px;"></div>
+  <div class="text number" id="timer"></div>
 </div>
 
 <div id="photo1Slide" class="slide">
@@ -133,21 +79,13 @@
 
 <div id="photo5Slide" class="slide">
   <div class="text">Сделано Софе от Дани 💘😘</div>
-  <img src="https://i.postimg.cc/bwNMn2Pq/IMG-20260309-010409-964.jpg" alt="Фото 5">
+  <img src="https://i.postimg.cc/NjnKqmf0/IMG-20260309-013240.jpg" alt="Фото 5">
 </div>
 
 <script>
 function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
-
-async function showSlide(id){ 
-  document.getElementById(id).classList.add('show'); 
-  await sleep(10);
-}
-
-async function hideSlide(id){ 
-  document.getElementById(id).classList.remove('show'); 
-  await sleep(10);
-}
+async function showSlide(id){ document.getElementById(id).classList.add('show'); await sleep(10); }
+async function hideSlide(id){ document.getElementById(id).classList.remove('show'); await sleep(10); }
 
 async function runShow(){
   const loadingText = document.getElementById('loadingText');
@@ -156,7 +94,7 @@ async function runShow(){
   const flash = document.getElementById('flash');
   const textTyping = document.getElementById('textTyping');
 
-  // --- Загрузка ---
+  // Загрузка
   await showSlide('loadingSlide');
   for(let i=0;i<=100;i+=2){
     loadingText.innerText = `Загрузка... ${i}%`;
@@ -165,46 +103,52 @@ async function runShow(){
   }
   await hideSlide('loadingSlide');
 
-  // --- Сбой ---
+  // Ошибка
   await showSlide('errorSlide'); await sleep(2000); await hideSlide('errorSlide');
-  await showSlide('fixSlide'); await sleep(2500); await hideSlide('fixSlide');
-  await showSlide('fixedSlide'); await sleep(2000); await hideSlide('fixedSlide');
 
-  // --- Отсчёт 3-2-1 + вспышка ---
-  await showSlide('countdownSlide');
+  // Починка
+  await showSlide('fixSlide'); await sleep(2500); await hideSlide('fixSlide');
+
+  // Отсчёт
+  await showSlide('countdownSlide'); 
+  await sleep(1500);
+  document.querySelector("#countdownSlide .text").style.display='none'; // фраза исчезает
+
   for(let i=3;i>0;i--){
     timerEl.innerText = i;
-    await sleep(1000);
+    await sleep(1200);
     timerEl.innerText = '';
     await sleep(300);
   }
   await hideSlide('countdownSlide');
-  flash.style.display = 'block'; await sleep(200); flash.style.display = 'none';
 
-  // --- Фото 1 ---
-  await showSlide('photo1Slide'); await sleep(4000); await hideSlide('photo1Slide');
+  // Вспышка
+  flash.style.display='block'; await sleep(200); flash.style.display='none';
 
-  // --- Фото вместо видео ---
+  // Фото 1
+  await showSlide('photo1Slide'); await sleep(5000); await hideSlide('photo1Slide');
+
+  // Фото вместо видео
   await showSlide('photoVideoSlide'); await sleep(5000); await hideSlide('photoVideoSlide');
 
-  // --- Фото 2 ---
-  await showSlide('photo2Slide'); await sleep(4000); await hideSlide('photo2Slide');
+  // Фото 2
+  await showSlide('photo2Slide'); await sleep(5000); await hideSlide('photo2Slide');
 
-  // --- Фото 3 ---
-  await showSlide('photo3Slide'); await sleep(4000); await hideSlide('photo3Slide');
+  // Фото 3
+  await showSlide('photo3Slide'); await sleep(5000); await hideSlide('photo3Slide');
 
-  // --- Фото 4 с печатью текста ---
+  // Фото 4 с медленной печатью
   await showSlide('photo4Slide');
-  let message = "Я тя обожаю, самая лучшая подруга, улыбайся чаще)";
-  textTyping.innerText = '';
+  let message = "Я тебя обожаю, ты самая лучшая подруга, улыбайся чаще :)";
+  textTyping.innerText='';
   for(let i=0;i<message.length;i++){
     textTyping.innerText += message[i];
     await sleep(70);
   }
-  await sleep(4000);
+  await sleep(5000);
   await hideSlide('photo4Slide');
 
-  // --- Фото 5 Финал ---
+  // Фото 5 Финал
   await showSlide('photo5Slide');
 }
 
@@ -212,4 +156,4 @@ runShow();
 </script>
 
 </body>
-  </html>
+</html>
